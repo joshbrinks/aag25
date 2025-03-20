@@ -827,5 +827,28 @@ TOPSTSCHOOL curriculum materials available at:<br>
 :::
 
 :::
+
+## Additional Materials {.smaller}
+
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.75em;"}
+- Other materials examining California drought and Yellowknife wildfire disaster of 2023, demonstrating regional and local applications of open science tools
+
+- Datasets integrated across these materials:
+  - EPA ICIS-AIR & Toxic Release Inventory
+  - CDC PLACES health outcomes & Social Vulnerability Index
+  - NASA SEDAC population grids
+  - NOAA drought monitor indices
+  - NASA FIRMS fire detection
+  - NASA & NOAA satellite imagery
+:::
+
+::: {.column width="50%"}
+<video data-autoplay loop muted>
+  <source src="lesson_highlights.mp4" type="video/mp4">
+</video>
+:::
+:::
+
 ## Thank You
 <!-- Contact information and resources -->
