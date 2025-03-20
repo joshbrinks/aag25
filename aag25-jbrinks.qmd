@@ -1,0 +1,831 @@
+---
+title: "Transforming Environmental Justice Research Through Open Science"
+subtitle: "Case Studies in Air Quality, Drought, and Climate Vulnerability"
+transition: slide
+lightbox: true
+author: "Joshua Brinks"
+institute: "Research Scientist, ISciences, LLC"
+output-dir: docs
+preview-links: true
+highlight-style: dracula
+format: 
+  revealjs:
+    auto-stretch: false
+    footer: "American Association of Geographers 2025 Annual Meeting | Detroit, MI"
+    logo: "isci_logo.png"
+    embed-resources: true
+    theme: "school_theme.scss"
+    include-after-body: no_footer_title.html
+---
+
+## Presentation Outline {.smaller}  
+
+- ISciences in 60 Seconds
+- Importance of Open Science
+- TOPSTSCHOOL Content Overview
+- Case Study 1: Air Quality in Detroit Metro
+- Conclusion & Next Steps
+
+
+## ISciences {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Who We Are {.smaller}
+- FOSS Focused Research and technology firm based in Burlington, VT
+- Specializing in geospatial analytics and applied statistical modeling
+- Focus on water resources, political instability environmental monitoring, and risk assessment
+- Small team of scientists, engineers, and developers
+:::
+
+::: {.column width="50%"}
+### What We Do {.smaller}
+- Partner with agencies including NASA, NOAA, USACE, intelligence
+- Develop water security monitoring systems (WSIM)
+- Develop open source software, packages, and educational materials
+- Support decision-making through data-driven insights
+
+:::
+:::
+
+## Broader Benefits {.smaller}
+- **Reproducible**: Collaborative and open tools
+- **Accessible**: Open data and open content
+- **Inclusive**: Diverse stakeholders and inclusive workflows
+
+## In Geospatial Analysis {.smaller}
+
+- Open data formats
+- Shared analytical methods
+- Reproducible, replicable, containerization 
+- Collaborative platforms
+
+## In Context of SCHOOL {.smaller}
+
+- Roadmaps for access to data and tools
+- Reduce barriers for learning these tool
+- Enable participation from diverse stakeholders
+- Solicit feeback from under-resourced communities
+- Builds trust through transparency
+
+## Curriculum Highlights {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+
+#### Four Core Modules 
+
+- Water Resources (3 lessons)
+- Air Quality & EJ (3 lessons)
+- Disaster Response (4 lessons)
+- Climate & Agriculture (3 lessons)
+:::
+::: {.column width="50%"}
+
+#### Today's Focus
+- In-depth exploration of Air Quality & Environmental Justice lesson
+- Demo of open science approaches in these domains
+:::
+:::
+
+## Air Quality in Detroit Metro {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Overview {.smaller}
+- Examines air quality issues in Detroit metropolitan area
+- Focuses on environmental justice concerns
+- Integrates pollution, vulnerability, and health data
+- Demonstrates community-relevant analytical approaches
+
+:::
+
+::: {.column width="50%"}
+### Learning Objectives {.smaller}
+- Retrieve and process air quality data
+- Analyze pollution sources geospatially
+- Assess relationships with social vulnerability
+- Explore connections to health outcomes
+- Create actionable visualizations
+:::
+:::
+
+## Datasets & Packages {.smaller}
+
+::: {.columns}
+::: {.column width="50%"}
+### Key Datasets {.smaller}
+- **EPA ICIS-AIR**: Compliance data for regulated facilities
+- **EPA Toxic Release Inventory**: Chemical releases from industrial sites
+- **CDC Social Vulnerability Index**: Community vulnerability metrics
+- **CDC PLACES**: Local-level health outcome estimates
+:::
+
+::: {.column width="50%"}
+### Python Packages {.smaller}
+- **pandas/geopandas**: Data manipulation
+- **matplotlib/contextily**: Visualization
+- **requests**: API interaction
+- **rasterio/xarray**: Raster processing
+- **scipy**: Statistical analysis
+- **pysal**: Spatial statistics
+:::
+:::
+
+## Considerations {.smaller}
+
+::: {.callout-warning style="font-size: 0.85em;"}
+## Preface: A Note on Data Interpretation and Ethical Considerations
+
+The topics of environmental justice, institutional racism, socioeconomic conditions, and pollution are complex and multifaceted. The data and analyses presented in this lesson are not intended to draw definitive conclusions or suggest scientific evidence of cause and effect relationships. Rather, they are meant to equip you with the skills to investigate data and perform analyses that could be applied to your local communities.
+
+As you work through this lesson, remember that correlation does not imply [causation](https://www.coursera.org/articles/correlation-vs-causation). The patterns you may observe in the data could be influenced by factors not represented in these datasets. Approach your findings with caution, and consider the broader historical, social, and economic contexts that shape environmental and health outcomes in different communities.
+
+This lesson will empower you with data literacy and analytical skills. We encourage you to use these tools and skills responsibly. Consider the ethical implications of your analyses and the potential impact on the communities represented in the data. When drawing insights or making decisions based on such analyses, it’s crucial to involve community stakeholders, consider multiple perspectives, and seek additional expertise when necessary.
+:::
+
+## Defining the Study Area {.smaller}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+# Define counties of interest
+counties = ['Wayne', 'Oakland', 'Macomb']
+
+# Fetch the county boundaries for Michigan from pygris dataset
+metro_counties = pygris.counties(state="MI", year=2022)
+
+# Filter the DataFrame to only include counties in the Detroit metro area
+detroit_metro = metro_counties[metro_counties['NAME'].isin(counties)]
+
+# Combine the geometries of selected counties into a single polygon
+detroit_metro = detroit_metro.dissolve(by='STATEFP')
+
+# Convert to GeoDataFrame and ensure coordinate reference system is EPSG:4269
+detroit_metro = gpd.GeoDataFrame(detroit_metro, geometry='geometry', crs='EPSG:4269')
+
+# Obtain the total bounding box for the Detroit metro area polygon
+bbox = detroit_metro.total_bounds
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**pygris** provides direct access to Census Bureau TIGER/Line shapefiles.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](study-area.png){width="85%"}
+:::
+:::::
+
+## Accessing ICIS-AIR {.smaller}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="55%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;' style="font-size: 0.85em;"}
+::: {style="max-width: 100%; overflow-x: auto;"}
+
+##### EPA ECHO Data Service API
+
+- Multi-step query process to retrieve facility data
+- Programmatic access to compliance & enforcement records
+
+##### Data Processing Challenges
+
+- Verified coordinate data completeness
+- Filtered by violation status
+
+##### Key Insights
+- 3,000+ regulated facilities in Detroit metro
+- Identified violation hotspots along industrial corridors
+:::
+:::
+
+::: {.column width="45%" style='display: flex; justify-content: center; align-items: center;'}
+![](icis-air-facilities.png){width="100%"}
+:::
+:::::
+
+## TRI Data Processing {.smaller}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+# Initialize list to hold TRI facility data for each county
+tri_data = []
+
+# Loop through each county to fetch TRI data separately
+for county in counties:
+    # Construct the API URL for the current county
+    api_url = f"https://data.epa.gov/efservice/tri_facility/state_abbr/MI/county_name/{county}/JSON"
+    response = requests.get(api_url)
+
+    # Check if the response was successful
+    if response.status_code == 200:
+        county_data = response.json()
+        # Append the current county's TRI data to the overall list
+        tri_data.extend(county_data)
+    else:
+        print(f"Failed to fetch data for {county} County. Status code: {response.status_code}")
+
+# Create a Pandas DataFrame from the collected TRI data
+tri_df = pd.DataFrame(tri_data)
+
+# Reproject TRI facility data to Web Mercator for map visualization
+gdf_tri_form_r_bm = gdf_tri_form_r.to_crs(epsg=3857)
+
+# Create scatter plot with graduated symbols based on air release amount
+scatter = ax.scatter(gdf_tri_form_r_bm.geometry.x, gdf_tri_form_r_bm.geometry.y, 
+                     s=gdf_tri_form_r_bm['LOG_AIR_RELEASE']*20,  # Size by log of release
+                     c='orangered',  # Color of symbols
+                     edgecolor='yellow',  # Edge color for visibility
+                     alpha=0.7)  # Transparency
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**geopandas** enables visualization of facility air release amounts with graduated symbols.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](air-release-graduated.png){width="100%"}
+:::
+:::::
+ 
+## Social Vulnerability Index {.smaller}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+import xarray as xr
+import rasterio
+import rasterio.mask
+
+# Define paths to SVI TIF files - different vulnerability aspects
+tif_files = [
+    "data/svi/svi_2020_tract_overall_wgs84.tif",
+    "data/svi/svi_2020_tract_minority_wgs84.tif",
+    "data/svi/svi_2020_tract_socioeconomic_wgs84.tif",
+    "data/svi/svi_2020_tract_housing_wgs84.tif",
+    "data/svi/svi_2020_tract_household_wgs84.tif"
+]
+
+# Process each SVI layer
+data_arrays = []
+for file in tif_files:
+    with rasterio.open(file) as src:
+        # Clip to Detroit metro area
+        metro_reprojected = detroit_metro.to_crs(src.crs)
+        out_image, out_transform = rasterio.mask.mask(
+            src, metro_reprojected.geometry, crop=True)
+        
+        # Create DataArray with coordinates
+        da = xr.DataArray(out_image[0],
+                         coords={'y': ('y', ys[:, 0]),
+                                'x': ('x', xs[0, :])},
+                         dims=['y', 'x'])
+        data_arrays.append(da)
+
+# Combine DataArrays with named layers
+layer_names = ['Overall', 'Minority', 'Socioeconomic', 
+              'Housing', 'Household']
+svi_detroit = xr.concat(data_arrays, dim='layer')
+svi_detroit = svi_detroit.assign_coords(
+    layer=('layer', layer_names))
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+SEDAC's SVI is a gridded version of the CDC Census Tract data
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](svi-detroit.png){width="85%"}
+:::
+:::::
+
+## Air Release Vulnerability Index {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto; font-size: 0.85em;"}
+##### Novel Spatial Integration Methods
+
+- Combined demographic vulnerability with pollution exposure
+- Rasterized point-source data to create continuous pollution surface
+- Normalized both layers to 0-1 scale for equal weighting
+
+##### Raster Math Process
+
+- Aligned SVI and pollution data with consistent projections
+- Multiplied layers to identify highest combined impact areas
+:::
+
+
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](svi-overall.png){.fragment width="85%"}
+:::
+:::::
+
+## Air Release Vulnerability Index {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from rasterio.enums import Resampling
+
+# Select the 'Overall' layer from SVI dataset
+svi_overall = svi_detroit.sel(layer='Overall')
+svi_overall = svi_overall.rio.write_crs("EPSG:4326")
+
+# Reproject SVI to match the TRI air release raster
+svi_reprojected = svi_overall.rio.reproject_match(
+    air_release_raster_da)
+
+# Transform and normalize the air release data
+# 1. Log transform to reduce impact of outliers
+air_release_log = np.log1p(air_release_disaggregated)
+
+# 2. Scale log values to 0-1 range to match SVI
+air_release_scaled = (air_release_log - air_release_log.min()) / \
+                    (air_release_log.max() - air_release_log.min())
+
+# Multiply scaled air release with SVI to create vulnerability index
+# High values = areas with both high pollution and high vulnerability
+vulnerability_indicator = air_release_scaled * svi_reprojected
+
+# Find locations with highest combined vulnerability
+vulnerability_df = vulnerability_indicator.to_dataframe(
+    name='index').reset_index()
+top_10 = vulnerability_df.sort_values(
+    'index', ascending=False).head(10)
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**rioxarray** enables raster algebra between air pollution and SVI layers.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](air-log-release.png){.fragment width="85%"}
+:::
+:::::
+
+## Air Release Vulnerability Index {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from rasterio.enums import Resampling
+
+# Select the 'Overall' layer from SVI dataset
+svi_overall = svi_detroit.sel(layer='Overall')
+svi_overall = svi_overall.rio.write_crs("EPSG:4326")
+
+# Reproject SVI to match the TRI air release raster
+svi_reprojected = svi_overall.rio.reproject_match(
+    air_release_raster_da)
+
+# Transform and normalize the air release data
+# 1. Log transform to reduce impact of outliers
+air_release_log = np.log1p(air_release_disaggregated)
+
+# 2. Scale log values to 0-1 range to match SVI
+air_release_scaled = (air_release_log - air_release_log.min()) / \
+                    (air_release_log.max() - air_release_log.min())
+
+# Multiply scaled air release with SVI to create vulnerability index
+# High values = areas with both high pollution and high vulnerability
+vulnerability_indicator = air_release_scaled * svi_reprojected
+
+# Find locations with highest combined vulnerability
+vulnerability_df = vulnerability_indicator.to_dataframe(
+    name='index').reset_index()
+top_10 = vulnerability_df.sort_values(
+    'index', ascending=False).head(10)
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.75em;"}
+Identify the most vulnerable populations with values closest to 1
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](svi-air-index.png){.fragment width="85%"}
+:::
+:::::
+
+
+
+## CDC PLACES Health Data Analysis {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from scipy.interpolate import griddata
+
+# Access CDC PLACES data via GeoJSON API
+url = "https://data.cdc.gov/resource/cwsq-ngmh.geojson"
+county_filter = " OR ".join([f"countyname = '{county}'" 
+                           for county in detroit_counties])
+params = {
+    "$where": f"stateabbr = 'MI' AND ({county_filter})",
+    "$limit": 50000
+}
+response = requests.get(url, params=params)
+gdf = gpd.read_file(response.text)
+
+# Filter for asthma data
+gdf_asthma = gdf[gdf['measure'] == 'Current asthma among adults'].copy()
+gdf_asthma['data_value'] = pd.to_numeric(
+    gdf_asthma['data_value'], errors='coerce')
+
+# Prepare for IDW interpolation
+X = gdf_asthma.geometry.x.values
+Y = gdf_asthma.geometry.y.values
+Z = gdf_asthma['data_value'].values
+mask = ~np.isnan(Z)
+X, Y, Z = X[mask], Y[mask], Z[mask]
+
+# Create interpolation grid
+grid_resolution = 0.025
+x_min, y_min, x_max, y_max = gdf_asthma.total_bounds
+grid_x = np.arange(x_min, x_max, grid_resolution)
+grid_y = np.arange(y_min, y_max, grid_resolution)
+grid_xx, grid_yy = np.meshgrid(grid_x, grid_y)
+
+# Interpolate asthma prevalence surface
+grid_z = griddata(np.column_stack((X, Y)), Z, 
+                 (grid_xx, grid_yy), method='linear')
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**scipy.interpolate** creates continuous health surfaces from point data.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](cdc-places-asthma-prev.png){width="85%"}
+:::
+:::::
+## CDC PLACES Health Data Analysis {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from scipy.interpolate import griddata
+
+# Access CDC PLACES data via GeoJSON API
+url = "https://data.cdc.gov/resource/cwsq-ngmh.geojson"
+county_filter = " OR ".join([f"countyname = '{county}'" 
+                           for county in detroit_counties])
+params = {
+    "$where": f"stateabbr = 'MI' AND ({county_filter})",
+    "$limit": 50000
+}
+response = requests.get(url, params=params)
+gdf = gpd.read_file(response.text)
+
+# Filter for asthma data
+gdf_asthma = gdf[gdf['measure'] == 'Current asthma among adults'].copy()
+gdf_asthma['data_value'] = pd.to_numeric(
+    gdf_asthma['data_value'], errors='coerce')
+
+# Prepare for IDW interpolation
+X = gdf_asthma.geometry.x.values
+Y = gdf_asthma.geometry.y.values
+Z = gdf_asthma['data_value'].values
+mask = ~np.isnan(Z)
+X, Y, Z = X[mask], Y[mask], Z[mask]
+
+# Create interpolation grid
+grid_resolution = 0.025
+x_min, y_min, x_max, y_max = gdf_asthma.total_bounds
+grid_x = np.arange(x_min, x_max, grid_resolution)
+grid_y = np.arange(y_min, y_max, grid_resolution)
+grid_xx, grid_yy = np.meshgrid(grid_x, grid_y)
+
+# Interpolate asthma prevalence surface
+grid_z = griddata(np.column_stack((X, Y)), Z, 
+                 (grid_xx, grid_yy), method='linear')
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**scipy.interpolate** creates continuous health surfaces from point data.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](cdc-places-asthma-idw.png){width="85%"}
+:::
+:::::
+
+
+## Spatial Correlation Analysis {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from pysal.explore import esda
+from pysal.lib import weights
+from splot.esda import moran_scatterplot
+import shapely
+
+# Create GeoDataFrame with aligned air release and asthma data
+df = gpd.GeoDataFrame({
+    'air_release': air_release_aligned.values.flatten(),
+    'asthma': ds_clipped.asthma.values.flatten(),
+    'geometry': [
+        shapely.geometry.Point(x, y) 
+        for x, y in zip(
+            np.repeat(air_release_aligned.x.values, 
+                     len(air_release_aligned.y)),
+            np.tile(air_release_aligned.y.values, 
+                   len(air_release_aligned.x))
+        )
+    ]
+})
+df = df.dropna()  # Remove rows with NaN values
+
+# Create spatial weights matrix (k-nearest neighbors)
+w = weights.distance.KNN.from_dataframe(df, k=8)
+w.transform = 'r'  # Row-standardize weights
+
+# Calculate Bivariate Moran's I for air release vs asthma
+moran_bv = esda.Moran_BV(df['air_release'], df['asthma'], w)
+print(f"Bivariate Moran's I: {moran_bv.I}")
+print(f"p-value: {moran_bv.p_sim}")
+
+# Test shows significant spatial relationship between 
+# air releases and asthma prevalence (p < 0.001)
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**pysal** enables spatial autocorrelation analysis to assess pollution-health relationships.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](air-release-moran.png){width="100%"}
+:::
+:::::
+
+## Spatial Correlation Analysis {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from pysal.explore import esda
+from pysal.lib import weights
+from splot.esda import moran_scatterplot
+import shapely
+
+# Create GeoDataFrame with aligned air release and asthma data
+df = gpd.GeoDataFrame({
+    'air_release': air_release_aligned.values.flatten(),
+    'asthma': ds_clipped.asthma.values.flatten(),
+    'geometry': [
+        shapely.geometry.Point(x, y) 
+        for x, y in zip(
+            np.repeat(air_release_aligned.x.values, 
+                     len(air_release_aligned.y)),
+            np.tile(air_release_aligned.y.values, 
+                   len(air_release_aligned.x))
+        )
+    ]
+})
+df = df.dropna()  # Remove rows with NaN values
+
+# Create spatial weights matrix (k-nearest neighbors)
+w = weights.distance.KNN.from_dataframe(df, k=8)
+w.transform = 'r'  # Row-standardize weights
+
+# Calculate Bivariate Moran's I for air release vs asthma
+moran_bv = esda.Moran_BV(df['air_release'], df['asthma'], w)
+print(f"Bivariate Moran's I: {moran_bv.I}")
+print(f"p-value: {moran_bv.p_sim}")
+
+# Test shows significant spatial relationship between 
+# air releases and asthma prevalence (p < 0.001)
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**pysal** enables spatial autocorrelation analysis to assess pollution-health relationships.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](asthma-prev-moran.png){width="100%"}
+:::
+:::::
+
+## Spatial Correlation Analysis {.smaller auto-animate=true}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
+```{.python style="font-size: 0.85em;"}
+from pysal.explore import esda
+from pysal.lib import weights
+from splot.esda import moran_scatterplot
+import shapely
+
+# Create GeoDataFrame with aligned air release and asthma data
+df = gpd.GeoDataFrame({
+    'air_release': air_release_aligned.values.flatten(),
+    'asthma': ds_clipped.asthma.values.flatten(),
+    'geometry': [
+        shapely.geometry.Point(x, y) 
+        for x, y in zip(
+            np.repeat(air_release_aligned.x.values, 
+                     len(air_release_aligned.y)),
+            np.tile(air_release_aligned.y.values, 
+                   len(air_release_aligned.x))
+        )
+    ]
+})
+df = df.dropna()  # Remove rows with NaN values
+
+# Create spatial weights matrix (k-nearest neighbors)
+w = weights.distance.KNN.from_dataframe(df, k=8)
+w.transform = 'r'  # Row-standardize weights
+
+# Calculate Bivariate Moran's I for air release vs asthma
+moran_bv = esda.Moran_BV(df['air_release'], df['asthma'], w)
+print(f"Bivariate Moran's I: {moran_bv.I}")
+print(f"p-value: {moran_bv.p_sim}")
+
+# Test shows significant spatial relationship between 
+# air releases and asthma prevalence (p < 0.001)
+```
+:::
+
+::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
+**pysal** enables spatial autocorrelation analysis to assess pollution-health relationships.
+:::
+:::
+
+::: {.column width="50%" style='display: flex; justify-content: center; align-items: center;'}
+![](bivariate-moran.png){width="100%"}
+:::
+:::::
+
+## Analysis Limitations and Caveats {.smaller auto-animate=true}
+
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Scale and Resolution Effects  {.smaller}
+- 5km resolution may be too coarse for some analyses
+- Air pollution impacts likely extend beyond cell boundaries
+- Results sensitive to choice of grid cell size
+:::
+::: {.column width="50%" style="font-size: 0.85em;"}
+:::
+:::
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+:::
+::: {.column width="50%" style="font-size: 0.85em;"}  
+:::
+:::
+
+
+## Analysis Limitations and Caveats {.smaller auto-animate=true}
+
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Scale and Resolution Effects  {.smaller}
+- 5km resolution may be too coarse for some analyses
+- Air pollution impacts likely extend beyond cell boundaries
+- Results sensitive to choice of grid cell size
+:::
+
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Data Completeness
+- TRI only captures regulated facilities and reportable chemicals
+- ~40% of facilities lacked valid geographic coordinates
+- Unregulated sources and mobile emissions not included
+:::
+:::
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+:::
+::: {.column width="50%" style="font-size: 0.85em;"}  
+:::
+:::
+
+
+
+## Analysis Limitations and Caveats {.smaller auto-animate=true}
+
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Scale and Resolution Effects  {.smaller}
+- 5km resolution may be too coarse for some analyses
+- Air pollution impacts likely extend beyond cell boundaries
+- Results sensitive to choice of grid cell size
+:::
+
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Data Completeness
+- TRI only captures regulated facilities and reportable chemicals
+- ~40% of facilities lacked valid geographic coordinates
+- Unregulated sources and mobile emissions not included
+:::
+:::
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Statistical Considerations
+- Correlation (0.19) is significant but weak
+- Numerous zero-value cells affect statistical relationships
+- Spatial autocorrelation stronger for asthma (0.52) than for air releases (0.12)
+:::
+::: {.column width="50%" style="font-size: 0.85em;"}  
+:::
+:::
+
+
+
+## Analysis Limitations and Caveats {.smaller auto-animate=true}
+
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Scale and Resolution Effects  {.smaller}
+- 5km resolution may be too coarse for some analyses
+- Air pollution impacts likely extend beyond cell boundaries
+- Results sensitive to choice of grid cell size
+:::
+
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Data Completeness
+- TRI only captures regulated facilities and reportable chemicals
+- ~40% of facilities lacked valid geographic coordinates
+- Unregulated sources and mobile emissions not included
+:::
+:::
+::: {.columns}
+::: {.column width="50%" style="font-size: 0.85em;"}
+#### Statistical Considerations
+- Correlation (0.19) is significant but weak
+- Numerous zero-value cells affect statistical relationships
+- Spatial autocorrelation stronger for asthma (0.52) than for air releases (0.12)
+:::
+::: {.column width="50%" style="font-size: 0.85em;"}  
+#### Confounding Variables
+- Socioeconomic factors not controlled for in correlation analysis
+- Traffic density and other emission sources not accounted for
+- Healthcare access differences may affect reported asthma rates
+:::
+:::
+
+## Conclusion {.smaller}
+
+::: {style="display: flex; flex-direction: column; justify-content: center; height: 90%;"}
+
+::: {.incremental style="font-size: 0.85em;"}
+- **Open Science Enables Environmental Justice Research**
+  - Direct API access to EPA and CDC data democratizes environmental analysis
+  - Open tools like Python/R and freely available datasets reduce barriers
+  - Reproducible workflows foster transparency and community involvement
+
+- **Detroit Case Study Demonstrates Potential**
+  - Identified meaningful spatial relationships between pollution and vulnerability
+  - Quantified areas of highest combined environmental burden
+  - Created methodologies transferable to other communities
+
+- **Empowering Communities Through Data Literacy**
+  - Educational materials like these lessons build technical capacity
+  - Data-driven advocacy strengthens community voices in policy decisions
+  - Collaborative approaches bridge scientific analysis and local knowledge
+:::
+
+::: {.r-stretch}
+:::
+
+::: {.callout-note appearance="simple"}
+TOPSTSCHOOL curriculum materials available at:<br>
+[https://ciesin-geospatial.github.io/TOPSTSCHOOL/](https://ciesin-geospatial.github.io/TOPSTSCHOOL/)
+:::
+
+:::
+## Thank You
+<!-- Contact information and resources -->
