@@ -1,0 +1,8 @@
+> list.files("Documents/Packages/aag25/", pattern = ".png")
+ [1] "air-release-graduated.png"    "air-release-grid.png"        
+ [3] "asthma-prev-moran.png"        "bivariate-moran.png"         
+ [5] "cdc-places-asthma-idw.png"    "cdc-places-asthma-prev.png"  
+ [7] "highest-index-cells.png"      "icis-air-facilities.png"     
+ [9] "icis-air-violations.png"      "icis-tri-facilities.png"     
+[11] "log-tri-air-release-plot.png" "study-area.png"              
+[13] "svi-air-sviairindicator.png"  "svi-detroit.png"

@@ -1,0 +1,10 @@
+---
+title: "Abstract"
+format: html
+---
+
+Transforming environmental justice and water resource research through open science requires accessible tools and educational approaches. This presentation introduces three interconnected lessons developed for NASA's Transform to Open Science SCHOOL curriculum that demonstrate how open data and reproducible workflows can empower communities to investigate local environmental concerns. Using case studies exploring air quality in Detroit, drought impacts in California, and climate vulnerability nationwide, these lessons guide learners through the complete data science lifecycle while integrating multiple open datasets including NASA's, EPA, and NOAA datasets.
+
+Following SCHOOL's pedagogical framework of inclusive teaching and active learning, the curriculum employs multiple learning modes to teach data acquisition, processing, analysis, and visualization using open-source R and Python tools. The first lesson integrates EPA air quality monitoring with vulnerability indices to examine environmental justice concerns in Detroit's industrial corridors. The second lesson demonstrates how drought monitoring data can be combined with population data to assess community impacts in California. Lastly, we introduce emerging climate datasets that enable real-time monitoring of temperature extremes and their impacts on vulnerable populations. Each lesson emphasizes reproducible workflows and transparent methodologies, enabling learners to adapt these approaches to investigate environmental justice concerns in their own communities.
+
+This community-focused approach demonstrates how open science practices can transform environmental justice research from isolated academic studies into participatory investigations that inform local policy and action. By integrating multiple open datasets and emphasizing reproducible analysis, the curriculum provides practical tools for evidence-based advocacy while advancing SCHOOL's mission of fostering an inclusive open science culture.
