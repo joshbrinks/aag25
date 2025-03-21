@@ -32,3 +32,25 @@ $presentation-heading-color: #383d3d !default;
 .quarto-title-block .footer {
   display: none !important;
 }
+
+.title {
+  font-size: 1.5em !important;  /* Adjust this value as needed */
+}
+
+.subtitle {
+  font-size: 1.2em !important;  /* Adjust this value as needed */
+}
+
+.quarto-title-author-name {
+  font-size: 0.8em !important;  /* Adjust this value as needed */
+}
+
+.quarto-title-affiliatiopn {
+  font-size: 0.8em !important;  /* Adjust this value as needed */
+}
+.quarto-title-block {
+  background-color: rgba(220, 220, 220, 0.7);
+  border: 5px solid #3399ccff;
+  padding: 20px;
+  display: inline-block;
+}

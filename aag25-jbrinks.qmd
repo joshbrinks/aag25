@@ -1,7 +1,8 @@
 ---
 title: "Transforming Environmental Justice Research Through Open Science"
-subtitle: "Case Studies in Air Quality, Drought, and Climate Vulnerability"
+subtitle: "Case Studies in Air Quality in Detroit Metro"
 transition: slide
+preload-iframes: true
 lightbox: true
 author: "Joshua Brinks"
 institute: "Research Scientist, ISciences, LLC"
@@ -10,6 +11,8 @@ preview-links: true
 highlight-style: dracula
 format: 
   revealjs:
+    title-slide-attributes:
+      data-background-iframe: "multiple-images/index.html"
     auto-stretch: false
     footer: "American Association of Geographers 2025 Annual Meeting | Detroit, MI"
     logo: "isci_logo.png"
