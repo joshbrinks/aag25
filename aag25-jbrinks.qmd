@@ -816,6 +816,7 @@ print(f"p-value: {moran_bv.p_sim}")
   - Educational materials like these lessons build technical capacity
   - Data-driven advocacy strengthens community voices in policy decisions
   - Collaborative approaches bridge scientific analysis and local knowledge
+
 :::
 
 ::: {.r-stretch}
@@ -830,24 +831,43 @@ TOPSTSCHOOL curriculum materials available at:<br>
 
 ## Additional Materials {.smaller}
 
-::: {.columns}
-::: {.column width="50%" style="font-size: 0.75em;"}
-- Other materials examining California drought and Yellowknife wildfire disaster of 2023, demonstrating regional and local applications of open science tools
+Lessons detailing 2014 California drought, 2023 Canadian Wildfires, 2022 Central Plains Flash Drought
 
-- Datasets integrated across these materials:
-  - EPA ICIS-AIR & Toxic Release Inventory
-  - CDC PLACES health outcomes & Social Vulnerability Index
-  - NASA SEDAC population grids
-  - NOAA drought monitor indices
-  - NASA FIRMS fire detection
-  - NASA & NOAA satellite imagery
+::: {.columns style='display: flex !important; height: 55%;'}
+::: {.column width="40%" style="font-size: 0.5em; display: flex; flex-direction: column; justify-content: center;"}
+
+- NASA's Fire Information for Resource Management System (FIRMS)
+- NOAA's GOES-18 Aerosol Optical Depth (AOD)
+- VIIRS Burned Area Product (VNP64A1)
+- GOES-18 Derived Motion Winds (DMW)
+- OpenStreetMap (OSM) road network data
+- Yellowknife municipal boundary
+- Water Security (WSIM-GLDAS) Monthly Grids, v1 (1948-2014)
+- geoBoundaries API (administrative boundaries)
+- Gridded Population of the World (GPW) Version 4
+- SPORT-LIS soil moisture root zone
+- GOES-LST Land surface temperature at 2km resolution
+- RTMA air temperature 2.5km resolution air temperature analysis
+- OpenET Ensemble evapotranspiration estimates
+- MODIS NDVI 16-day vegetation health indicators
+- USDA pasture conditions Weekly agricultural impact assessments
 :::
 
-::: {.column width="50%"}
-<video data-autoplay loop muted>
-  <source src="lesson_highlights.mp4" type="video/mp4">
-</video>
+
+
+::: {.column width="60%" style="display: flex; justify-content: center; align-items: center;"}
+<div style="width: 100%; height: auto; max-height: 100%;">
+  <video style="width: 100%; height: auto;" data-autoplay loop muted>
+    <source src="padded_video.mp4" type="video/mp4">
+  </video>
+</div>
 :::
+:::
+<!-- Additional content can go here, below the columns -->
+
+::: {.callout-note appearance="simple"}
+TOPSTSCHOOL curriculum materials available at:<br>
+[https://ciesin-geospatial.github.io/TOPSTSCHOOL/](https://ciesin-geospatial.github.io/TOPSTSCHOOL/)
 :::
 
 ## Thank You
