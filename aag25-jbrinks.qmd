@@ -12,7 +12,7 @@ highlight-style: dracula
 format: 
   revealjs:
     title-slide-attributes:
-      data-background-iframe: "multiple-images/index.html"
+      data-background-iframe: "https://joshbrinks.github.io/aag25/multiple-images/index.html"
     auto-stretch: false
     footer: "American Association of Geographers 2025 Annual Meeting | Detroit, MI"
     logo: "isci_logo.png"
