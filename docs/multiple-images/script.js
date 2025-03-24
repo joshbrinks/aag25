@@ -125,6 +125,11 @@ tsParticles.load("tsparticles", {
   src: "hexes/open-science.png",
   width: 300,
   height: 300
+},
+{
+  src: "hexes/isci-circle.png",
+  width: 139,
+  height: 134
 }
       ],
       polygon: {
