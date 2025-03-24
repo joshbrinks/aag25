@@ -5,6 +5,7 @@ transition: slide
 preload-iframes: true
 lightbox: true
 author: "Joshua Brinks"
+email: jbrinks@isciences.com
 institute: "Research Scientist, ISciences, LLC"
 output-dir: docs
 preview-links: true
@@ -24,10 +25,10 @@ format:
 ## Presentation Outline {.smaller}  
 
 - ISciences in 60 Seconds
-- Importance of Open Science
-- TOPSTSCHOOL Content Overview
-- Air Quality in Detroit Metro
-- Conclusion & Next Steps
+- TOPSTSCHOOL and Open Science
+- Case Study: Air Quality in Detroit Metro
+- Highlight Additional Lessons
+- Conclusion
 
 
 ## ISciences {.smaller}
@@ -54,16 +55,20 @@ format:
 ![](isci-marketing.png){width="100%"}
 
 ## Broader Benefits {.smaller}
+
+::::: {.columns style='display: flex !important; height: 90%;'}
+::: {.column width="60%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
+::: {style="max-width: 100%; overflow-x: auto;"}
 - **Reproducible**: Collaborative and open tools
 - **Accessible**: Open data and open content
 - **Inclusive**: Diverse stakeholders and inclusive workflows
+:::
+:::
 
-## In Geospatial Analysis {.smaller}
-
-- Open data formats
-- Shared analytical methods
-- Reproducible, replicable, containerization 
-- Collaborative platforms
+::: {.column width="40%" style='display: flex; justify-content: center; align-items: center;'}
+![](Circle_Diagram_UPDATE_2.png){width="85%"}
+:::
+:::::
 
 ## In Context of SCHOOL {.smaller}
 
@@ -72,26 +77,6 @@ format:
 - Enable participation from diverse stakeholders
 - Solicit feeback from under-resourced communities
 - Builds trust through transparency
-
-## Curriculum Highlights {.smaller}
-
-::: {.columns}
-::: {.column width="50%"}
-
-#### Four Core Modules 
-
-- Water Resources (3 lessons)
-- Air Quality & EJ (3 lessons)
-- Disaster Response (4 lessons)
-- Climate & Agriculture (3 lessons)
-:::
-::: {.column width="50%"}
-
-#### Today's Focus
-- In-depth exploration of Air Quality & Environmental Justice lesson
-- Demo of open science approaches in these domains
-:::
-:::
 
 ## Air Quality in Detroit Metro {.smaller}
 
@@ -140,7 +125,7 @@ format:
 ## Considerations {.smaller}
 
 ::: {.callout-warning style="font-size: 0.85em;"}
-## Preface: A Note on Data Interpretation and Ethical Considerations
+### Preface: A Note on Data Interpretation and Ethical Considerations
 
 The topics of environmental justice, institutional racism, socioeconomic conditions, and pollution are complex and multifaceted. The data and analyses presented in this lesson are not intended to draw definitive conclusions or suggest scientific evidence of cause and effect relationships. Rather, they are meant to equip you with the skills to investigate data and perform analyses that could be applied to your local communities.
 
@@ -148,6 +133,14 @@ As you work through this lesson, remember that correlation does not imply [causa
 
 This lesson will empower you with data literacy and analytical skills. We encourage you to use these tools and skills responsibly. Consider the ethical implications of your analyses and the potential impact on the communities represented in the data. When drawing insights or making decisions based on such analyses, it’s crucial to involve community stakeholders, consider multiple perspectives, and seek additional expertise when necessary.
 :::
+
+## The Full Lesson
+
+- Today I'm showcasing the pretty pictures
+- Much of the value might be in the contextual information
+    - Tables and database navigation
+    - Data background
+- [The full lesson](https://ciesin-geospatial.github.io/TOPSTSCHOOL-air-quality/m202-svi-tri-icis-places.html)
 
 ## Defining the Study Area {.smaller}
 
@@ -189,7 +182,7 @@ bbox = detroit_metro.total_bounds
 
 ::::: {.columns style='display: flex !important; height: 90%;'}
 ::: {.column width="55%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;' style="font-size: 0.85em;"}
-::: {style="max-width: 100%; overflow-x: auto;"}
+::: {style="max-width: 100%; overflow-x: auto; font-size: 0.85em;"}
 
 ##### EPA ECHO Data Service API
 
@@ -437,48 +430,12 @@ Identify the most vulnerable populations with values closest to 1
 
 ::::: {.columns style='display: flex !important; height: 90%;'}
 ::: {.column width="50%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
-::: {style="max-width: 100%; overflow-x: auto;"}
-```{.python style="font-size: 0.85em;"}
-from scipy.interpolate import griddata
+::: {style="max-width: 100%; overflow-x: auto; font-size: 0.85em;"}
+- Provides model-based population-level analysis and community estimates of health indicators
 
-# Access CDC PLACES data via GeoJSON API
-url = "https://data.cdc.gov/resource/cwsq-ngmh.geojson"
-county_filter = " OR ".join([f"countyname = '{county}'" 
-                           for county in detroit_counties])
-params = {
-    "$where": f"stateabbr = 'MI' AND ({county_filter})",
-    "$limit": 50000
-}
-response = requests.get(url, params=params)
-gdf = gpd.read_file(response.text)
+- Contains wide range of chronic disease measures including asthma, diabetes, and heart disease
 
-# Filter for asthma data
-gdf_asthma = gdf[gdf['measure'] == 'Current asthma among adults'].copy()
-gdf_asthma['data_value'] = pd.to_numeric(
-    gdf_asthma['data_value'], errors='coerce')
-
-# Prepare for IDW interpolation
-X = gdf_asthma.geometry.x.values
-Y = gdf_asthma.geometry.y.values
-Z = gdf_asthma['data_value'].values
-mask = ~np.isnan(Z)
-X, Y, Z = X[mask], Y[mask], Z[mask]
-
-# Create interpolation grid
-grid_resolution = 0.025
-x_min, y_min, x_max, y_max = gdf_asthma.total_bounds
-grid_x = np.arange(x_min, x_max, grid_resolution)
-grid_y = np.arange(y_min, y_max, grid_resolution)
-grid_xx, grid_yy = np.meshgrid(grid_x, grid_y)
-
-# Interpolate asthma prevalence surface
-grid_z = griddata(np.column_stack((X, Y)), Z, 
-                 (grid_xx, grid_yy), method='linear')
-```
-:::
-
-::: {.callout-note appearance="simple" style="font-size: 0.85em;"}
-**scipy.interpolate** creates continuous health surfaces from point data.
+- Enables standardized comparison of health indicators across different geographic areas
 :::
 :::
 
@@ -804,41 +761,22 @@ print(f"p-value: {moran_bv.p_sim}")
 
 ## Conclusion {.smaller}
 
-::: {style="display: flex; flex-direction: column; justify-content: center; height: 90%;"}
-
-::: {.incremental style="font-size: 0.85em;"}
 - **Open Science Enables Environmental Justice Research**
   - Direct API access to EPA and CDC data democratizes environmental analysis
   - Open tools like Python/R and freely available datasets reduce barriers
   - Reproducible workflows foster transparency and community involvement
-
-- **Detroit Case Study Demonstrates Potential**
-  - Identified meaningful spatial relationships between pollution and vulnerability
-  - Quantified areas of highest combined environmental burden
-  - Created methodologies transferable to other communities
-
+  
 - **Empowering Communities Through Data Literacy**
   - Educational materials like these lessons build technical capacity
   - Data-driven advocacy strengthens community voices in policy decisions
+  - Created methodologies transferable to other communities
   - Collaborative approaches bridge scientific analysis and local knowledge
-
-:::
-
-::: {.r-stretch}
-:::
-
-::: {.callout-note appearance="simple"}
-TOPSTSCHOOL curriculum materials available at:<br>
-[https://ciesin-geospatial.github.io/TOPSTSCHOOL/](https://ciesin-geospatial.github.io/TOPSTSCHOOL/)
-:::
-
-:::
 
 ## Additional Materials {.smaller}
 
 Lessons detailing 2014 California drought, 2023 Canadian Wildfires, 2022 Central Plains Flash Drought
 
-::: {.columns style='display: flex !important; height: 40%;'}
+::: {.columns style='display: flex !important; height: 50%;'}
 ::: {.column width="40%" style="font-size: 0.5em; display: flex; flex-direction: column; justify-content: center;"}
 
 - NASA's Fire Information for Resource Management System (FIRMS)
@@ -871,9 +809,12 @@ Lessons detailing 2014 California drought, 2023 Canadian Wildfires, 2022 Central
 <!-- Additional content can go here, below the columns -->
 
 ::: {.callout-note appearance="simple"}
-TOPSTSCHOOL curriculum materials available at:<br>
-[https://ciesin-geospatial.github.io/TOPSTSCHOOL/](https://ciesin-geospatial.github.io/TOPSTSCHOOL/)
+TOPSTSCHOOL curriculum materials available at: [https://ciesin-geospatial.github.io/TOPSTSCHOOL/](https://ciesin-geospatial.github.io/TOPSTSCHOOL/)
 :::
 
 ## Thank You
+
+- NASA TOPS/Open Science
+- Columbia
+- Open Science Team
 <!-- Contact information and resources -->
