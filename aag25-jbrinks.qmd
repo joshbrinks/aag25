@@ -1,5 +1,5 @@
 ---
-title: "Transforming Environmental Justice Research Through Open Science"
+title: "Open Science Applications for Environmental Justice Research"
 subtitle: "Case Studies in Air Quality in Detroit Metro"
 transition: slide
 preload-iframes: true
@@ -86,8 +86,7 @@ This presentation is live at:
 ::: {.columns}
 ::: {.column width="50%"}
 ### Overview {.smaller}
-- Examines air quality issues in Detroit metropolitan area
-- Focuses on environmental justice concerns
+- Examines air quality and health outcomes datasets
 - Integrates pollution, vulnerability, and health data
 - Demonstrates community-relevant analytical approaches
 
@@ -110,7 +109,7 @@ This presentation is live at:
 ### Key Datasets {.smaller}
 - **EPA ICIS-AIR**: Compliance data for regulated facilities
 - **EPA Toxic Release Inventory**: Chemical releases from industrial sites
-- **CDC Social Vulnerability Index**: Community vulnerability metrics
+- **NASA Social Vulnerability Index**: Community vulnerability metrics
 - **CDC PLACES**: Local-level health outcome estimates
 :::
 
@@ -144,6 +143,7 @@ This lesson will empower you with data literacy and analytical skills. We encour
     - Tables and database navigation
     - Data background
 - [The full lesson](https://ciesin-geospatial.github.io/TOPSTSCHOOL-air-quality/m202-svi-tri-icis-places.html)
+- Let's check out some of the methods 
 
 ## Defining the Study Area {.smaller}
 
@@ -818,6 +818,7 @@ TOPSTSCHOOL curriculum materials available at: [https://ciesin-geospatial.github
 ## Thank You
 
 - NASA TOPS/Open Science
-- Columbia
-- Open Science Team
+- Center for International Earth Science Information Network (CIESIN) - Columbia University
+- Open Science Team and other SCHOOL contributors.
+
 <!-- Contact information and resources -->
