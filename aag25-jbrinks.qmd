@@ -28,7 +28,10 @@ format:
 - TOPSTSCHOOL and Open Science
 - Case Study: Air Quality in Detroit Metro
 - Highlight Additional Lessons
-- Conclusion
+
+This presentation is live at:
+
+https://joshbrinks.github.io/aag25/aag25-jbrinks.html
 
 
 ## ISciences {.smaller}
