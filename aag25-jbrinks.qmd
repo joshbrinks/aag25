@@ -26,15 +26,15 @@ format:
 - ISciences in 60 Seconds
 - Importance of Open Science
 - TOPSTSCHOOL Content Overview
-- Case Study 1: Air Quality in Detroit Metro
+- Air Quality in Detroit Metro
 - Conclusion & Next Steps
 
 
 ## ISciences {.smaller}
 
-::: {.columns}
+::: {.columns style='display: flex !important; height: 50%; font-size: 0.85em;'}
 ::: {.column width="50%"}
-### Who We Are {.smaller}
+### Who We Are {.smaller }
 - FOSS Focused Research and technology firm based in Burlington, VT
 - Specializing in geospatial analytics and applied statistical modeling
 - Focus on water resources, political instability environmental monitoring, and risk assessment
@@ -50,6 +50,8 @@ format:
 
 :::
 :::
+
+![](isci-marketing.png){width="100%"}
 
 ## Broader Benefits {.smaller}
 - **Reproducible**: Collaborative and open tools
@@ -836,7 +838,7 @@ TOPSTSCHOOL curriculum materials available at:<br>
 
 Lessons detailing 2014 California drought, 2023 Canadian Wildfires, 2022 Central Plains Flash Drought
 
-::: {.columns style='display: flex !important; height: 55%;'}
+::: {.columns style='display: flex !important; height: 40%;'}
 ::: {.column width="40%" style="font-size: 0.5em; display: flex; flex-direction: column; justify-content: center;"}
 
 - NASA's Fire Information for Resource Management System (FIRMS)
