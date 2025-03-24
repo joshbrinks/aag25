@@ -62,9 +62,11 @@ This presentation is live at:
 ::::: {.columns style='display: flex !important; height: 90%;'}
 ::: {.column width="60%" style='display: flex; flex-direction: column; justify-content: center; align-items: center;'}
 ::: {style="max-width: 100%; overflow-x: auto;"}
-- **Reproducible**: Collaborative and open tools
-- **Accessible**: Open data and open content
-- **Inclusive**: Diverse stakeholders and inclusive workflows
+- Roadmaps for access to data and tools
+- Reduce barriers for learning these tool
+- Enable participation from diverse stakeholders
+- Solicit feeback from under-resourced communities
+- Builds trust through transparency
 :::
 :::
 
@@ -73,13 +75,6 @@ This presentation is live at:
 :::
 :::::
 
-## In Context of SCHOOL {.smaller}
-
-- Roadmaps for access to data and tools
-- Reduce barriers for learning these tool
-- Enable participation from diverse stakeholders
-- Solicit feeback from under-resourced communities
-- Builds trust through transparency
 
 ## Air Quality in Detroit Metro {.smaller}
 
@@ -762,18 +757,11 @@ print(f"p-value: {moran_bv.p_sim}")
 :::
 :::
 
-## Conclusion {.smaller}
+## Conclusions {.smaller}
 
-- **Open Science Enables Environmental Justice Research**
-  - Direct API access to EPA and CDC data democratizes environmental analysis
-  - Open tools like Python/R and freely available datasets reduce barriers
-  - Reproducible workflows foster transparency and community involvement
-  
-- **Empowering Communities Through Data Literacy**
-  - Educational materials like these lessons build technical capacity
-  - Data-driven advocacy strengthens community voices in policy decisions
-  - Created methodologies transferable to other communities
-  - Collaborative approaches bridge scientific analysis and local knowledge
+- There's a lot more online, but those are some of the highlights
+- Not really appropriate to draw conclusions from the results
+- Get people comfortable with the data
 
 ## Additional Materials {.smaller}
 
