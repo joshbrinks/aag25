@@ -31,7 +31,7 @@ format:
 
 This presentation is live at:
 
-https://joshbrinks.github.io/aag25/aag25-jbrinks.html
+[https://joshbrinks.github.io/aag25/aag25-jbrinks.html](https://joshbrinks.github.io/aag25/aag25-jbrinks.html)
 
 
 ## ISciences {.smaller}
